@@ -5,7 +5,7 @@ class ProductScanModel {
   ProductScanModel({this.code, this.quantity});
 
   ProductScanModel.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
+    code = json['code'].toString();
     quantity = json['quantity'];
   }
 

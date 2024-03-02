@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_pos/screens/home.dart';
+import 'package:smart_pos/screens/payment.dart';
 import 'package:smart_pos/theme/theme.dart';
 
 import 'screens/login.dart';
@@ -38,6 +39,12 @@ class MyApp extends StatelessWidget {
             name: RouteHandler.HOME,
             page: () => HomeScreen(),
             transition: Transition.circularReveal),
+        GetPage(
+            name: RouteHandler.PAYMENT,
+            page: () => PaymentScreen(
+                  id: Get.parameters['id'] ?? '0',
+                ),
+            transition: Transition.cupertino),
         // GetPage(
         //     name: RouteHandler.PRINTER,
         //     page: () => ScanBluetoohPrinter(),

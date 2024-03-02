@@ -1,42 +1,37 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:redis/redis.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:smart_pos/enums/status_enums.dart';
 import 'package:smart_pos/models/account_model.dart';
+import 'package:smart_pos/models/index.dart';
+import 'package:smart_pos/services/account_services.dart';
+import 'package:smart_pos/services/index.dart';
+import 'package:smart_pos/services/order_services.dart';
 import 'package:smart_pos/services/promotion_services.dart';
+import 'package:smart_pos/utils/share_pref.dart';
+import 'package:smart_pos/view_models/index.dart';
 
 import '../enums/order_enum.dart';
 import '../models/cart_model.dart';
+import '../models/customer.dart';
 import '../models/payment_provider.dart';
+import '../models/product_scan_model.dart';
 import '../models/promotion_model.dart';
+import '../utils/routes_constraints.dart';
+import '../widgets/dialog.dart';
 
 class CartViewModel extends Model {
   CartModel cart = CartModel();
-  AccountModel accountData = AccountModel();
+  AccountServices accountData = AccountServices();
+  OrderServices orderServices = OrderServices();
   List<PromotionPointify>? promotions = [];
+  RedisService redisService = RedisService();
   PromotionServices promotionServices = PromotionServices();
+  CustomerInfoModel? customer;
   late ViewStatus status;
   List<PaymentProvider> listPayment = [
-    PaymentProvider(
-        name: "Tiền mặt",
-        type: PaymentTypeEnums.CASH,
-        picUrl:
-            'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash.png?alt=media&token=42566a9d-b092-4e80-90dd-9313aeee081d'),
-    PaymentProvider(
-        name: "Momo",
-        type: PaymentTypeEnums.MOMO,
-        picUrl:
-            'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmomo.png?alt=media&token=d0d2e4f2-b035-4989-b04f-2ef55b9d0606'),
-    PaymentProvider(
-        name: "Ngân hàng",
-        type: PaymentTypeEnums.BANKING,
-        picUrl:
-            'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
-    PaymentProvider(
-        name: "Visa/Mastercard",
-        type: PaymentTypeEnums.VISA,
-        picUrl:
-            'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fvisa-credit-card.png?alt=media&token=1cfb48ab-b957-47db-8f52-89da33d0fb39'),
     PaymentProvider(
         name: "Thẻ thành viên",
         type: PaymentTypeEnums.POINTIFY,
@@ -46,7 +41,7 @@ class CartViewModel extends Model {
   CartViewModel() {
     cart.productList = [];
     cart.promotionList = [];
-    cart.paymentType = PaymentTypeEnums.CASH;
+    cart.paymentType = PaymentTypeEnums.POINTIFY;
     cart.totalAmount = 0;
     cart.finalAmount = 0;
     cart.bonusPoint = 0;
@@ -54,33 +49,88 @@ class CartViewModel extends Model {
     cart.customerId = null;
     cart.promotionCode = null;
     cart.voucherCode = null;
-    cart.orderType = DeliType().eatIn.type;
+    cart.orderType = DeliType().takeAway.type;
     cart.customerNumber = 1;
     status = ViewStatus.Completed;
   }
 
-  // Future scanCustomer(String phone) async {
-  //   try {
-  //     setState(ViewStatus.Loading);
-  //     customer = await accountData.scanCustomer(phone);
-  //     await prepareOrder();
-  //     notifyListeners();
-  //     setState(ViewStatus.Completed);
-  //   } catch (e) {
-  //     setState(ViewStatus.Error, e.toString());
-  //   }
-  // }
+  Future scanCustomer(String phone) async {
+    try {
+      setState(ViewStatus.Loading);
+      customer = await accountData.scanCustomer(phone);
+      cart.customerId = customer?.id;
+      await redisService.setDataToRedis("status", "SCANNING");
+      hideDialog();
+      notifyListeners();
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
+
+  Future scanProductFromRedis() async {
+    try {
+      var scanStatus = await redisService.getDataFromRedis("status");
+      if (scanStatus == "STOP" || scanStatus == null) {
+        return;
+      } else if (scanStatus == "SCANNING" && scanStatus != null) {
+        print(" scan product form redis");
+        var res = await redisService.getDataFromRedis("products");
+        List<ProductScanModel> list = ProductScanModel.fromList(
+            List<Map<String, dynamic>>.from(
+                jsonDecode(res.replaceAll("'", '"'))));
+        print(list);
+        if (list.isEmpty) {
+          return;
+        } else {
+          cart.productList = [];
+          print(list);
+          for (ProductScanModel item in list) {
+            print(item.code);
+            addToCart(item);
+          }
+        }
+
+        countCartAmount();
+        countCartQuantity();
+        setState(ViewStatus.Completed);
+      }
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
+
   void setState(ViewStatus newState, [String? msg]) {
     status = newState;
     msg = msg;
     notifyListeners();
   }
 
-  Future<void> addToCart(ProductList cartModel) async {
-    cart.productList!.add(cartModel);
-    countCartAmount();
-    countCartQuantity();
-    // await prepareOrder();
+  Future<void> addToCart(ProductScanModel product) async {
+    Product? productInfo = Get.find<MenuViewModel>()
+        .normalProducts
+        ?.firstWhereOrNull((element) => element.code == product.code);
+    if (productInfo == null) {
+      return;
+    }
+    ProductList productToAdd = ProductList(
+        productInMenuId: productInfo.menuProductId,
+        parentProductId: productInfo.parentProductId,
+        name: productInfo.name,
+        type: productInfo.type,
+        quantity: product.quantity,
+        code: product.code,
+        categoryCode: Get.find<MenuViewModel>()
+            .categories!
+            .firstWhereOrNull((element) => element.id == productInfo.categoryId)
+            ?.code,
+        sellingPrice: productInfo.sellingPrice,
+        totalAmount: productInfo.sellingPrice! * (product.quantity ?? 1),
+        finalAmount: productInfo.sellingPrice! * (product.quantity ?? 1),
+        discount: 0,
+        extras: [],
+        attributes: []);
+    cart.productList!.add(productToAdd);
     notifyListeners();
   }
 
@@ -114,7 +164,8 @@ class CartViewModel extends Model {
   }
 
   void clearCartData() {
-    cart.paymentType = PaymentTypeEnums.CASH;
+    customer = null;
+    cart.paymentType = PaymentTypeEnums.POINTIFY;
     cart.orderType = DeliType().eatIn.type;
     cart.customerNumber = 1;
     cart.productList = [];
@@ -128,7 +179,6 @@ class CartViewModel extends Model {
     cart.shippingFee = 0;
     cart.customerId = null;
     cart.customerName = null;
-
     notifyListeners();
   }
 
@@ -170,46 +220,50 @@ class CartViewModel extends Model {
     notifyListeners();
   }
 
-  // Future<void> prepareOrder() async {
-  //   cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
-  //   cart.discountAmount = 0;
-  //   cart.bonusPoint = 0;
-  //   cart.customerId = customer?.id;
-  //   cart.customerName = customer?.fullName;
-  //   cart.finalAmount = cart.totalAmount;
-  //   for (var element in cart.productList!) {
-  //     element.discount = 0;
-  //     element.finalAmount = element.totalAmount;
-  //     element.promotionCodeApplied = null;
-  //   }
-  //   cart.promotionList!.clear();
-  //   if (cart.promotionCode == null &&
-  //       cart.voucherCode == null &&
-  //       cart.customerId == null) {
-  //     hideDialog();
-  //     return;
-  //   }
-  //   Account? userInfo = await getUserInfo();
-  //   await api.prepareOrder(cart, userInfo!.storeId).then((value) => {
-  //         cart = value,
-  //       });
-  //   hideDialog();
-  // }
+  Future<void> prepareOrder() async {
+    cart.paymentType = PaymentTypeEnums.POINTIFY;
+    cart.discountAmount = 0;
+    cart.bonusPoint = 0;
+    cart.customerId = customer?.id;
+    cart.customerName = customer?.fullName;
+    cart.finalAmount = cart.totalAmount;
+    for (var element in cart.productList!) {
+      element.discount = 0;
+      element.finalAmount = element.totalAmount;
+      element.promotionCodeApplied = null;
+    }
+    cart.promotionList!.clear();
+    if (cart.promotionCode == null &&
+        cart.voucherCode == null &&
+        cart.customerId == null) {
+      return;
+    }
+    var storeId = await getStoreId();
+    await orderServices.prepareOrder(cart, storeId ?? '').then((value) => {
+          cart = value,
+        });
+  }
 
-  // Future<void> createOrder() async {
-  //   bool res = false;
-  //   for (var item in cart.productList!) {
-  //     if (item.attributes != null) {
-  //       for (var attribute in item.attributes!) {
-  //         item.note = (attribute.value != null && attribute.value!.isNotEmpty)
-  //             ? "${attribute.name} ${attribute.value}, ${item.note}"
-  //             : item.note;
-  //       }
-  //     }
-  //   }
-  //   await Get.find<OrderViewModel>().placeOrder(cart).then((value) => {
-  //         res = value,
-  //         if (res == true) {clearCartData()}
-  //       });
-  // }
+  Future<void> createOrder() async {
+    for (var item in cart.productList!) {
+      if (item.attributes != null) {
+        for (var attribute in item.attributes!) {
+          item.note = (attribute.value != null && attribute.value!.isNotEmpty)
+              ? "${attribute.name} ${attribute.value}, ${item.note}"
+              : item.note;
+        }
+      }
+    }
+    var storeId = await getStoreId();
+    orderServices.createOrder(cart, storeId!).then((value) async => {
+          if (value != null)
+            {
+              await redisService.setDataToRedis("status", "STOP"),
+              clearCartData(),
+              Get.toNamed(
+                "${RouteHandler.PAYMENT}?id=$value",
+              )
+            }
+        });
+  }
 }

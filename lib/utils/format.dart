@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../models/index.dart';
+import '../view_models/index.dart';
 
 String formatPrice(num price, {num discount = 0}) {
   NumberFormat format = NumberFormat("#,###.##");
@@ -100,4 +104,14 @@ String formatTimeOnly(String time) {
   DateTime dateTime = DateFormat("HH:mm:ss").parse(time);
   String formattedDate = DateFormat('HH:mm').format(dateTime);
   return formattedDate;
+}
+
+String getPaymentName(String paymentType) {
+  List<PaymentProvider> listPayment = Get.find<CartViewModel>().listPayment;
+  for (var item in listPayment) {
+    if (item.type == paymentType) {
+      return item.name!;
+    }
+  }
+  return "Tiền mặt";
 }

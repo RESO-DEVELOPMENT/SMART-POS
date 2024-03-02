@@ -9,13 +9,64 @@ Future<bool> showAlertDialog(
     {String title = "Thông báo",
     String content = "Nội dung thông báo",
     String confirmText = "Đồng ý"}) async {
+  hideDialog();
   bool result = false;
-  showTopSnackBar(
-    Overlay.of(Get.context!),
-    CustomSnackBar.success(
-      message: content,
+  await Get.dialog(Dialog(
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+    child: Container(
+      width: Get.size.width * 0.3,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Get.theme.colorScheme.background,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Get.theme.colorScheme.shadow,
+            blurRadius: 10.0,
+            offset: Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            title,
+            style: Get.textTheme.titleLarge,
+          ),
+          Divider(
+            color: Get.theme.colorScheme.onBackground,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              content,
+              style: Get.textTheme.bodyLarge,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  result = false;
+                  hideDialog();
+                },
+                child: Text(
+                  confirmText,
+                  style: Get.textTheme.bodyLarge,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     ),
-  );
+  ));
   return result;
 }
 
@@ -99,7 +150,7 @@ Future<bool> showConfirmDialog(
 showLoadingDialog() {
   hideDialog();
   Get.dialog(Dialog(
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
       width: Get.size.width * 0.3,

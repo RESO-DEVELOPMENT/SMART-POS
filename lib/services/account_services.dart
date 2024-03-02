@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:smart_pos/models/login_model.dart';
 
 import '../models/account_model.dart';
+import '../models/customer.dart';
 import '../utils/request.dart';
 import '../utils/share_pref.dart';
 
@@ -29,5 +30,20 @@ class AccountServices {
       }
     }
     return null;
+  }
+
+  Future<CustomerInfoModel?> scanCustomer(String phone) async {
+    final response =
+        await request.get("stores/scan-code", queryParameters: {"code": phone});
+
+    if (response.statusCode == 200) {
+      final customer = response.data;
+
+      CustomerInfoModel customerInfoModel =
+          CustomerInfoModel.fromJson(customer);
+      return customerInfoModel;
+    } else {
+      return null;
+    }
   }
 }
