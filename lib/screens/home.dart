@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                     return Container(
                       decoration: BoxDecoration(
-                        color: Get.theme.colorScheme.onInverseSurface,
+                        color: ThemeColor.onBackgroundColor,
                         // borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(

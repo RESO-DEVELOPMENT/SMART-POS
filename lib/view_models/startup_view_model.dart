@@ -23,8 +23,8 @@ class StartUpViewModel extends Model {
     String? token = await getToken();
     if (token != null) {
       requestObj.setToken = token;
-      await Get.find<MenuViewModel>().getMenuOfStore();
-      await Get.find<CartViewModel>().getListPromotion();
+      // await Get.find<MenuViewModel>().getMenuOfStore();
+      // await Get.find<CartViewModel>().getListPromotion();
       // Get.offNamed(RouteHandler.HOME);
       Get.offNamed(RouteHandler.LOGIN);
     } else {
