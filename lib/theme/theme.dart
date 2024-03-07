@@ -28,6 +28,7 @@ ThemeData light() => ThemeData(
               brightness: Brightness.light,
               primary: ThemeColor.primaryColor,
               secondary: ThemeColor.secondaryColor,
+              surface: ThemeColor.surfaceColor,
               onBackground: ThemeColor.onBackgroundColor,
               background: ThemeColor.backgroundColor)
           .copyWith(error: ThemeColor.errorColor),
@@ -71,6 +72,7 @@ ThemeData dark() => ThemeData(
 class ThemeColor {
   static const primaryColor = Color(0xff2B46F2);
   static const secondaryColor = Color(0xffFDD835);
+  static const surfaceColor = Color(0xffe9ebed);
   static const backgroundColor = Color(0xffffffff);
   static const backgroundColorDark = Color(0xff121212);
   static const onBackgroundColor = Color(0xff121212);

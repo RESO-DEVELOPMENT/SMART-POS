@@ -107,13 +107,8 @@ class OrderViewModel extends Model {
     String orderId,
   ) async {
     String? storeId = await getStoreId();
-    if (paymentCode == null) {
-      await showAlertDialog(
-          title: "Lỗi thanh toán", content: "Vui lòng quét mã để thanh toán");
-      return;
-    }
     MakePaymentResponse? makePaymentResponse =
-        await api.makePayment(orderId, paymentCode, PaymentTypeEnums.POINTIFY);
+        await api.makePayment(orderId, PaymentTypeEnums.POINTIFY);
     if (makePaymentResponse?.status == "FAIL") {
       await showAlertDialog(
           title: "Lỗi thanh toán", content: makePaymentResponse?.message ?? '');
@@ -125,6 +120,21 @@ class OrderViewModel extends Model {
           title: "Thanh toán thành công",
           content: "Đơn hàng thanh toán thành công");
       Get.offNamed(RouteHandler.HOME);
+    }
+  }
+
+  Future<void> cancelOrder() async {
+    bool res = await showConfirmDialog(
+        title: "Hủy đơn",
+        content: "Bạn có chắc muốn hủy đơn hàng",
+        confirmText: "Xác nhận hủy",
+        cancelText: "Đóng");
+
+    if (res) {
+      await clearOrder();
+      Get.offNamed(RouteHandler.HOME);
+    } else {
+      return;
     }
   }
 

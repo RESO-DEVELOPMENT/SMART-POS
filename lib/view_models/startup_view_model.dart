@@ -17,8 +17,6 @@ class StartUpViewModel extends Model {
   }
   Future handleStartUpLogic() async {
     await service.setDataToRedis("status", 'STOP');
-    var res = await service.getDataFromRedis("status");
-    print(res);
     await Future.delayed(const Duration(seconds: 1));
     String? token = await getToken();
     if (token != null) {

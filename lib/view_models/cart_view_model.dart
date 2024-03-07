@@ -27,8 +27,10 @@ class CartViewModel extends Model {
   AccountServices accountData = AccountServices();
   OrderServices orderServices = OrderServices();
   List<PromotionPointify>? promotions = [];
+  dynamic? message;
   RedisService redisService = RedisService();
   PromotionServices promotionServices = PromotionServices();
+  bool checkingStatus = false;
   CustomerInfoModel? customer;
   late ViewStatus status;
   List<PaymentProvider> listPayment = [
@@ -59,7 +61,8 @@ class CartViewModel extends Model {
       setState(ViewStatus.Loading);
       customer = await accountData.scanCustomer(phone);
       cart.customerId = customer?.id;
-      await redisService.setDataToRedis("status", "SCANNING");
+      await redisService.setDataToRedis("status", "SCAN");
+      checkingStatus = true;
       hideDialog();
       notifyListeners();
       setState(ViewStatus.Completed);
@@ -70,21 +73,19 @@ class CartViewModel extends Model {
 
   Future scanProductFromRedis() async {
     try {
-      var scanStatus = await redisService.getDataFromRedis("status");
-      if (scanStatus == "STOP" || scanStatus == null) {
+      if (checkingStatus == false) {
         return;
-      } else if (scanStatus == "SCANNING" && scanStatus != null) {
-        print(" scan product form redis");
+      } else {
         var res = await redisService.getDataFromRedis("products");
+        var resMessage = await redisService.getDataFromRedis("message");
         List<ProductScanModel> list = ProductScanModel.fromList(
             List<Map<String, dynamic>>.from(
                 jsonDecode(res.replaceAll("'", '"'))));
-        print(list);
         if (list.isEmpty) {
           return;
         } else {
           cart.productList = [];
-          print(list);
+
           for (ProductScanModel item in list) {
             print(item.code);
             addToCart(item);
@@ -121,6 +122,7 @@ class CartViewModel extends Model {
         quantity: product.quantity,
         code: product.code,
         categoryCode: Get.find<MenuViewModel>()
+            .currentMenu!
             .categories!
             .firstWhereOrNull((element) => element.id == productInfo.categoryId)
             ?.code,
@@ -163,8 +165,9 @@ class CartViewModel extends Model {
     return cart.promotionCode == code;
   }
 
-  void clearCartData() {
+  Future<void> clearCartData() async {
     customer = null;
+    checkingStatus = false;
     cart.paymentType = PaymentTypeEnums.POINTIFY;
     cart.orderType = DeliType().eatIn.type;
     cart.customerNumber = 1;
@@ -179,6 +182,7 @@ class CartViewModel extends Model {
     cart.shippingFee = 0;
     cart.customerId = null;
     cart.customerName = null;
+    await redisService.setDataToRedis("status", "STOP");
     notifyListeners();
   }
 
@@ -245,6 +249,7 @@ class CartViewModel extends Model {
   }
 
   Future<void> createOrder() async {
+    await prepareOrder();
     for (var item in cart.productList!) {
       if (item.attributes != null) {
         for (var attribute in item.attributes!) {
@@ -258,8 +263,7 @@ class CartViewModel extends Model {
     orderServices.createOrder(cart, storeId!).then((value) async => {
           if (value != null)
             {
-              await redisService.setDataToRedis("status", "STOP"),
-              clearCartData(),
+              await clearCartData(),
               Get.toNamed(
                 "${RouteHandler.PAYMENT}?id=$value",
               )

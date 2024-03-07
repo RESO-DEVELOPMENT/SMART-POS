@@ -102,7 +102,7 @@ Future<bool> showConfirmDialog(
         children: <Widget>[
           Text(
             title,
-            style: Get.textTheme.titleLarge,
+            style: Get.textTheme.titleSmall,
           ),
           Divider(
             color: Get.theme.colorScheme.onBackground,
@@ -111,7 +111,7 @@ Future<bool> showConfirmDialog(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Text(
               content,
-              style: Get.textTheme.bodyLarge,
+              style: Get.textTheme.bodyMedium,
             ),
           ),
           Row(
@@ -123,7 +123,7 @@ Future<bool> showConfirmDialog(
                 },
                 child: Text(
                   cancelText,
-                  style: Get.textTheme.titleMedium,
+                  style: Get.textTheme.headlineMedium,
                 ),
               ),
               FilledButton(
@@ -133,7 +133,7 @@ Future<bool> showConfirmDialog(
                 },
                 child: Text(
                   confirmText,
-                  style: Get.textTheme.titleMedium!.copyWith(
+                  style: Get.textTheme.headlineSmall!.copyWith(
                     color: Get.theme.colorScheme.background,
                   ),
                 ),

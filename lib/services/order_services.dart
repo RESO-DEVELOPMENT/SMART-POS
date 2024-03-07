@@ -64,11 +64,9 @@ class OrderServices {
 
   Future<MakePaymentResponse>? makePayment(
     String orderId,
-    String? code,
     String? paymentType,
   ) async {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['code'] = code;
     data['paymentType'] = paymentType;
     final res = await request.post('orders/$orderId/payment', data: data);
     var json = res.data;
