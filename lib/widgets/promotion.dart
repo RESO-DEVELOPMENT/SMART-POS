@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,9 +24,9 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
       child: ScopedModelDescendant<CartViewModel>(
           builder: (context, build, model) {
         if (model.status == ViewStatus.Loading) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (model.promotions == null || model.promotions == []) {
-          return Center(
+          return const Center(
             child: Text("Hiên không có khuyến mãi cho cửa hàng này"),
           );
         }
@@ -59,7 +58,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                             voucherController.clear();
                             model.removeVoucher();
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.clear_rounded,
                             size: 32,
                           ),
@@ -79,7 +78,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                             borderSide: BorderSide(
                                 color: Get.theme.colorScheme.primaryContainer,
                                 width: 2.0)),
-                        contentPadding: EdgeInsets.all(16),
+                        contentPadding: const EdgeInsets.all(16),
                         isCollapsed: true,
                         errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -87,7 +86,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                 color: Get.theme.colorScheme.error,
                                 width: 2.0))),
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                   // FilledButton(
@@ -97,10 +96,10 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                   //       padding: const EdgeInsets.all(8.0),
                   //       child: Text("Kiểm tra"),
                   //     )),
-                  SizedBox(
+                  const SizedBox(
                     width: 16,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                 ],
@@ -142,7 +141,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                 ? Get.theme.colorScheme.primaryContainer
                                 : Get.theme.colorScheme.background,
                         child: Container(
-                          padding: EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
                           width: 200,
                           height: 160,
                           child: Column(
@@ -155,7 +154,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
                               ),
-                              Divider(),
+                              const Divider(),
                               Expanded(
                                   child: Text(
                                 item.description ?? '',
@@ -216,7 +215,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                 ? Get.theme.colorScheme.primaryContainer
                                 : Get.theme.colorScheme.background,
                         child: Container(
-                          padding: EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
                           width: 200,
                           height: 160,
                           child: Column(
@@ -229,7 +228,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
                               ),
-                              Divider(),
+                              const Divider(),
                               Expanded(
                                   child: Text(
                                 item.description ?? '',

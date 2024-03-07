@@ -26,7 +26,7 @@ Widget priceWidget(num price, TextStyle? style, {num discount = 0}) {
       children: [
         Text("(${formatPrice(price)})",
             style: style?.copyWith(decoration: TextDecoration.lineThrough)),
-        SizedBox(width: 2),
+        const SizedBox(width: 2),
         Text(
           formatPrice(price, discount: discount),
           style: style,

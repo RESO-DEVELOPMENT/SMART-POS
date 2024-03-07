@@ -49,7 +49,7 @@ Widget cartItem(ProductList item, int index) {
                       ? Text(
                           "-${formatPrice(item.discount ?? 0)}",
                         )
-                      : SizedBox.shrink(),
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
@@ -59,7 +59,7 @@ Widget cartItem(ProductList item, int index) {
       ListView.builder(
         shrinkWrap: true,
         itemCount: item.extras?.length,
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         itemBuilder: (context, i) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:smart_pos/theme/theme.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 Future<bool> showAlertDialog(
     {String title = "Thông báo",
@@ -16,7 +12,7 @@ Future<bool> showAlertDialog(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
       width: Get.size.width * 0.3,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.background,
         shape: BoxShape.rectangle,
@@ -25,7 +21,7 @@ Future<bool> showAlertDialog(
           BoxShadow(
             color: Get.theme.colorScheme.shadow,
             blurRadius: 10.0,
-            offset: Offset(0.0, 10.0),
+            offset: const Offset(0.0, 10.0),
           ),
         ],
       ),
@@ -78,11 +74,11 @@ Future<bool> showConfirmDialog(
   hideDialog();
   bool result = false;
   await Get.dialog(Dialog(
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
       width: Get.size.width * 0.5,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.background,
         shape: BoxShape.rectangle,
@@ -91,7 +87,7 @@ Future<bool> showConfirmDialog(
           BoxShadow(
             color: Get.theme.colorScheme.shadow,
             blurRadius: 10.0,
-            offset: Offset(0.0, 10.0),
+            offset: const Offset(0.0, 10.0),
           ),
         ],
       ),
@@ -154,7 +150,7 @@ showLoadingDialog() {
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
       width: Get.size.width * 0.3,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.background,
         shape: BoxShape.rectangle,
@@ -163,7 +159,7 @@ showLoadingDialog() {
           BoxShadow(
             color: Get.theme.colorScheme.shadow,
             blurRadius: 10.0,
-            offset: Offset(0.0, 10.0),
+            offset: const Offset(0.0, 10.0),
           ),
         ],
       ),
@@ -172,8 +168,8 @@ showLoadingDialog() {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          CircularProgressIndicator(),
-          SizedBox(
+          const CircularProgressIndicator(),
+          const SizedBox(
             height: 10,
           ),
           Text(

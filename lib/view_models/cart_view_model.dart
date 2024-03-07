@@ -1,22 +1,16 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:redis/redis.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:smart_pos/enums/status_enums.dart';
-import 'package:smart_pos/models/account_model.dart';
 import 'package:smart_pos/models/index.dart';
-import 'package:smart_pos/services/account_services.dart';
 import 'package:smart_pos/services/index.dart';
 import 'package:smart_pos/services/order_services.dart';
-import 'package:smart_pos/services/promotion_services.dart';
 import 'package:smart_pos/utils/share_pref.dart';
 import 'package:smart_pos/view_models/index.dart';
 
 import '../enums/order_enum.dart';
-import '../models/cart_model.dart';
 import '../models/customer.dart';
-import '../models/payment_provider.dart';
 import '../models/product_scan_model.dart';
 import '../models/promotion_model.dart';
 import '../utils/routes_constraints.dart';
@@ -27,7 +21,7 @@ class CartViewModel extends Model {
   AccountServices accountData = AccountServices();
   OrderServices orderServices = OrderServices();
   List<PromotionPointify>? promotions = [];
-  dynamic? message;
+  dynamic message;
   RedisService redisService = RedisService();
   PromotionServices promotionServices = PromotionServices();
   bool checkingStatus = false;
@@ -77,7 +71,7 @@ class CartViewModel extends Model {
         return;
       } else {
         var res = await redisService.getDataFromRedis("products");
-        var resMessage = await redisService.getDataFromRedis("message");
+        message = await redisService.getDataFromRedis("message");
         List<ProductScanModel> list = ProductScanModel.fromList(
             List<Map<String, dynamic>>.from(
                 jsonDecode(res.replaceAll("'", '"'))));

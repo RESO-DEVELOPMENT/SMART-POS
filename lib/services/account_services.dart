@@ -33,6 +33,7 @@ class AccountServices {
   }
 
   Future<CustomerInfoModel?> scanCustomer(String phone) async {
+    print(phone);
     final response =
         await request.get("stores/scan-code", queryParameters: {"code": phone});
 

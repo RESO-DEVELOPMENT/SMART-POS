@@ -55,6 +55,7 @@ class ExpiredException extends AppException {
 
 class CustomInterceptors extends Interceptor {
   int maxCharactersPerLine = 200;
+  @override
   Future onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     debugPrint("--> ${options.method} ${options.path}");

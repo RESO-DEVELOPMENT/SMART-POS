@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:smart_pos/enums/status_enums.dart';

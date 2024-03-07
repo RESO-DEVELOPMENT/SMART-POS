@@ -5,9 +5,10 @@ import 'package:smart_pos/theme/theme.dart';
 import '../view_models/login_view_model.dart';
 
 class LogInScreen extends StatefulWidget {
-  const LogInScreen({Key? key}) : super(key: key);
+  const LogInScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LogInScreenState createState() => _LogInScreenState();
 }
 
@@ -54,11 +55,11 @@ class _LogInScreenState extends State<LogInScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Smart POS',
                           style: POSTextTheme.titleL,
                         ),
-                        SizedBox(height: 32),
+                        const SizedBox(height: 32),
 
                         //LOGIN FORM
                         Form(
@@ -95,7 +96,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                     isDense: true,
                                     labelStyle: POSTextTheme.labelL,
                                     fillColor: ThemeColor.backgroundColor,
-                                    prefixIcon: Icon(
+                                    prefixIcon: const Icon(
                                       Icons.portrait_rounded,
                                       color: ThemeColor.onBackgroundColor,
                                     ),
@@ -103,35 +104,35 @@ class _LogInScreenState extends State<LogInScreen> {
                                       onPressed: () {
                                         _formUserNameFieldController.text = "";
                                       },
-                                      icon: Icon(Icons.clear),
+                                      icon: const Icon(Icons.clear),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.primaryColor,
                                             width: 2.0)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.primaryColor,
                                             width: 2.0)),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.primaryColor,
                                             width: 2.0)),
-                                    contentPadding: EdgeInsets.all(16),
+                                    contentPadding: const EdgeInsets.all(16),
                                     isCollapsed: true,
                                     errorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.errorColor,
                                             width: 2.0))),
                                 maxLines: 1,
                                 focusNode: _userNameFocus,
                               ),
 
-                              SizedBox(height: 16),
+                              const SizedBox(height: 16),
 
                               //PASSWORD FORM FIELD
                               TextFormField(
@@ -158,7 +159,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                     filled: true,
                                     isDense: true,
                                     fillColor: ThemeColor.backgroundColor,
-                                    prefixIcon: Icon(
+                                    prefixIcon: const Icon(
                                       Icons.key,
                                       color: ThemeColor.onBackgroundColor,
                                     ),
@@ -184,25 +185,25 @@ class _LogInScreenState extends State<LogInScreen> {
                                     ,
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.primaryColor,
                                             width: 2.0)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.primaryColor,
                                             width: 2.0)),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.primaryColor,
                                             width: 2.0)),
-                                    contentPadding: EdgeInsets.all(16),
+                                    contentPadding: const EdgeInsets.all(16),
                                     hintStyle: POSTextTheme.bodyM,
                                     isCollapsed: true,
                                     errorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(5),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: ThemeColor.errorColor,
                                             width: 2.0))),
                                 maxLines: 1,
@@ -211,7 +212,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: 48,
@@ -221,14 +222,15 @@ class _LogInScreenState extends State<LogInScreen> {
                                 model.posLogin(userName, password);
                               }
                             },
-                            child: Text("Đăng nhập", style: POSTextTheme.bodyL),
+                            child: const Text("Đăng nhập",
+                                style: POSTextTheme.bodyL),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 50,
                   ),
                   Image.asset(

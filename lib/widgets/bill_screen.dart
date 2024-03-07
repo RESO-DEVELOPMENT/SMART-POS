@@ -24,12 +24,12 @@ class _BillScreenState extends State<BillScreen> {
     return ScopedModelDescendant<OrderViewModel>(
         builder: (context, build, model) {
       if (model.status == ViewStatus.Loading || model.currentOrder == null) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       }
       return Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         width: Get.width,
         height: Get.height,
         decoration: BoxDecoration(
@@ -50,7 +50,7 @@ class _BillScreenState extends State<BillScreen> {
                       child:
                           Text("Thanh toán", style: Get.textTheme.titleSmall),
                     ),
-                    Divider(
+                    const Divider(
                       color: ThemeColor.surfaceColor,
                       thickness: 2,
                     ),
@@ -94,19 +94,19 @@ class _BillScreenState extends State<BillScreen> {
                         ],
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: ThemeColor.surfaceColor,
                       thickness: 2,
                     ),
                     ListView.builder(
                       shrinkWrap: true,
                       itemCount: model.currentOrder!.productList!.length,
-                      physics: ScrollPhysics(),
+                      physics: const ScrollPhysics(),
                       itemBuilder: (context, i) {
                         return productItem(model.currentOrder!.productList![i]);
                       },
                     ),
-                    Divider(
+                    const Divider(
                       color: ThemeColor.surfaceColor,
                       thickness: 2,
                     ),
@@ -168,7 +168,7 @@ class _BillScreenState extends State<BillScreen> {
                         ),
                       ],
                     ),
-                    Divider(
+                    const Divider(
                       color: ThemeColor.surfaceColor,
                       thickness: 2,
                     ),
@@ -191,7 +191,7 @@ class _BillScreenState extends State<BillScreen> {
                             shrinkWrap: true,
                             itemCount:
                                 model.currentOrder!.promotionList!.length,
-                            physics: ScrollPhysics(),
+                            physics: const ScrollPhysics(),
                             itemBuilder: (context, i) {
                               return Row(
                                 mainAxisAlignment:
@@ -214,7 +214,7 @@ class _BillScreenState extends State<BillScreen> {
                               );
                             },
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     model.currentOrder!.discount != 0
                         ? Padding(
                             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -233,8 +233,8 @@ class _BillScreenState extends State<BillScreen> {
                               ],
                             ),
                           )
-                        : SizedBox(),
-                    Divider(
+                        : const SizedBox(),
+                    const Divider(
                       color: ThemeColor.surfaceColor,
                       thickness: 2,
                     ),
@@ -264,7 +264,7 @@ class _BillScreenState extends State<BillScreen> {
 
   Widget customerInfo(CustomerInfo? info) {
     if (info == null) {
-      return SizedBox();
+      return const SizedBox();
     }
     return Column(
       children: [
@@ -347,7 +347,7 @@ Widget productItem(ProductList item) {
                           "-${formatPrice(item.discount!)}",
                           style: Get.textTheme.bodyMedium,
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -357,7 +357,7 @@ Widget productItem(ProductList item) {
       ListView.builder(
         shrinkWrap: true,
         itemCount: item.extras?.length,
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         itemBuilder: (context, i) {
           return Padding(
             padding: const EdgeInsets.fromLTRB(8, 4, 0, 4),
@@ -441,12 +441,12 @@ Future<String?> inputDialog(String title, String hint, String? value,
           onPressed: () {
             Get.back(result: result);
           },
-          child: Text('Cập nhật')),
+          child: const Text('Cập nhật')),
       TextButton(
           onPressed: () {
             Get.back(result: value);
           },
-          child: Text('Huỷ')),
+          child: const Text('Huỷ')),
     ],
   ));
   return result;

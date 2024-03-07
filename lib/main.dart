@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
             transition: Transition.zoom),
         GetPage(
             name: RouteHandler.HOME,
-            page: () => HomeScreen(),
+            page: () => const HomeScreen(),
             transition: Transition.zoom),
         GetPage(
             name: RouteHandler.PAYMENT,

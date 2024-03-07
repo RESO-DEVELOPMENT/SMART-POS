@@ -36,14 +36,11 @@ dependencies:
   cupertino_icons: ^1.0.6
   google_fonts: ^6.1.0
   dio: ^5.4.1
-  top_snackbar_flutter: ^3.1.0
   get: ^4.6.6
   shared_preferences: ^2.2.2
   intl: ^0.19.0
   scoped_model: ^2.0.0
   redis: ^4.0.0
-  http: ^1.2.1
-  redis_dart: ^0.1.0+4
 
 dev_dependencies:
   flutter_test:

@@ -11,7 +11,7 @@ Future<String?> scanPointifyWallet() async {
     child: Container(
       width: Get.width * 0.5,
       height: 160,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +66,7 @@ Future<String?> scanPointifyWallet() async {
               padding: const EdgeInsets.all(16),
               child: FilledButton.tonal(
                   onPressed: () {
-                    Get.find<CartViewModel>().scanCustomer(value.text ?? '');
+                    Get.find<CartViewModel>().scanCustomer(value.text);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

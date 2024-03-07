@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:smart_pos/theme/theme.dart';
@@ -12,7 +11,6 @@ import '../utils/format.dart';
 import '../view_models/cart_view_model.dart';
 import '../widgets/cart.dart';
 import '../widgets/dialog.dart';
-import '../widgets/scan_membership_card_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -125,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 16,
                 ),
                 Expanded(flex: 3, child: customerInfo())
@@ -334,7 +332,7 @@ Widget customerInfo() {
                       ?.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
-          Spacer(),
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

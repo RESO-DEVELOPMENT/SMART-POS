@@ -1,12 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 
 import 'package:scoped_model/scoped_model.dart';
 import 'package:smart_pos/view_models/index.dart';
 
-import '../enums/status_enums.dart';
 import '../theme/theme.dart';
 import '../widgets/bill_screen.dart';
 
