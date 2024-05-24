@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:smart_pos/models/login_model.dart';
+import 'package:smart_pos/services/request_pointify.dart';
 
 import '../models/account_model.dart';
 import '../models/customer.dart';
@@ -34,8 +35,9 @@ class AccountServices {
 
   Future<CustomerInfoModel?> scanCustomer(String phone) async {
     print(phone);
-    final response =
-        await request.get("stores/scan-code", queryParameters: {"code": phone});
+    var storeId = await getStoreId();
+    final response = await requestPointify
+        .get("stores/$storeId/scan-user", queryParameters: {"code": phone});
 
     if (response.statusCode == 200) {
       final customer = response.data;
